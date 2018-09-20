@@ -240,6 +240,10 @@ static void term_process_key(struct Term *term, unsigned char *key, size_t len,
     vterm_keyboard_key(term->vt, VTERM_KEY_FUNCTION(12), modifier);
   } else if (is_key(key, len, "SPC")) {
     vterm_keyboard_unichar(term->vt, ' ', modifier);
+  } else if (is_key(key, len, "<mouse-4>")) {
+    vterm_mouse_button(term->vt, 4, true, modifier);
+  } else if (is_key(key, len, "<mouse-5>")) {
+    vterm_mouse_button(term->vt, 5, true, modifier);
   } else if (len <= 4) {
     uint32_t codepoint;
     if (utf8_to_codepoint(key, len, &codepoint)) {

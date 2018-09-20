@@ -99,8 +99,8 @@ be send to the terminal."
 (define-key vterm-mode-map [mouse-1] nil)
 (define-key vterm-mode-map [mouse-2] nil)
 (define-key vterm-mode-map [mouse-3] nil)
-(define-key vterm-mode-map [mouse-4] #'ignore)
-(define-key vterm-mode-map [mouse-5] #'ignore)
+(define-key vterm-mode-map [mouse-4] #'vterm--self-insert)
+(define-key vterm-mode-map [mouse-5] #'vterm--self-insert)
 (dolist (prefix '("M-" "C-"))
   (dolist (char (cl-loop for char from ?a to ?z
                          collect char))
