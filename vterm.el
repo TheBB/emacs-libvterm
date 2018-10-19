@@ -85,14 +85,17 @@ be send to the terminal."
   (setq-local scroll-margin 0)
   (add-hook 'window-size-change-functions #'vterm--window-size-change t t)
   (let ((process-environment (append '("TERM=xterm") process-environment)))
-    (setq vterm--process (make-process
-                          :name "vterm"
-                          :buffer buffer
-                          :command `("/bin/sh" "-c" ,(format "stty -nl sane iutf8 rows %d columns %d >/dev/null && exec %s" (window-body-height) (window-body-width) vterm-shell))
-                          :coding 'no-conversion
-                          :connection-type 'pty
-                          :filter #'vterm--filter
-                          :sentinel #'vterm--sentinel))))
+    (setq vterm--process
+          (make-process
+           :name "vterm"
+           :buffer buffer
+           :command `("/bin/sh" "-c"
+                      ,(format "stty -nl sane iutf8 rows %d columns %d >/dev/null && exec %s"
+                               (window-body-height) (window-body-width) vterm-shell))
+           :coding 'no-conversion
+           :connection-type 'pty
+           :filter #'vterm--filter
+           :sentinel #'vterm--sentinel))))
 
 ;; Keybindings
 (define-key vterm-mode-map [t] #'vterm--self-insert)
@@ -151,8 +154,7 @@ be send to the terminal."
           (inhibit-redisplay t))
       (vterm--update vterm--term))))
 
-(defun vterm--sentinel (process event)
-  )
+(defun vterm--sentinel (process event))
 
 (defun vterm--window-size-change (frame)
   (dolist (window (window-list frame))
