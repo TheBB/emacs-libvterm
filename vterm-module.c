@@ -382,20 +382,16 @@ int emacs_module_init(struct emacs_runtime *ert) {
 
   // Exported functions
   emacs_value fun;
-  fun =
-      env->make_function(env, 2, 2, Fvterm_new, "Allocates a new vterm.", NULL);
+  fun = env->make_function(env, 2, 2, Fvterm_new, "Allocates a new vterm.", NULL);
   bind_function(env, "vterm--new", fun);
 
-  fun = env->make_function(env, 1, 5, Fvterm_update,
-                           "Process io and update the screen.", NULL);
+  fun = env->make_function(env, 1, 5, Fvterm_update, "Process io and update the screen.", NULL);
   bind_function(env, "vterm--update", fun);
 
-  fun = env->make_function(env, 2, 2, Fvterm_write_input,
-                           "Write input to vterm.", NULL);
+  fun = env->make_function(env, 2, 2, Fvterm_write_input, "Write input to vterm.", NULL);
   bind_function(env, "vterm--write-input", fun);
 
-  fun = env->make_function(env, 3, 3, Fvterm_set_size,
-                           "Sets the size of the terminal.", NULL);
+  fun = env->make_function(env, 3, 3, Fvterm_set_size, "Sets the size of the terminal.", NULL);
   bind_function(env, "vterm--set-size", fun);
 
   provide(env, "vterm-module");
