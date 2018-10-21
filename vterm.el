@@ -154,7 +154,13 @@ be send to the terminal."
           (inhibit-redisplay t))
       (vterm--update vterm--term))))
 
-(defun vterm--sentinel (process event))
+(defun vterm--sentinel (process event)
+  (with-current-buffer (process-buffer process)
+    (unless (process-live-p process)
+      (setq vterm--term nil
+            vterm--process nil)
+      (let ((inhibit-read-only t))
+        (insert "*** Shell process quit: " event)))))
 
 (defun vterm--window-size-change (frame)
   (dolist (window (window-list frame))
