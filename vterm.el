@@ -77,7 +77,7 @@ be send to the terminal."
 (make-variable-buffer-local 'vterm--process)
 
 (define-derived-mode vterm-mode fundamental-mode "VTerm"
-  "Mayor mode for vterm buffer."
+  "Major mode for vterm buffer."
   (buffer-disable-undo)
   (setq vterm--term (vterm--new (window-body-height) (window-body-width))
         buffer-read-only t)
@@ -88,7 +88,7 @@ be send to the terminal."
     (setq vterm--process
           (make-process
            :name "vterm"
-           :buffer buffer
+           :buffer (current-buffer)
            :command `("/bin/sh" "-c"
                       ,(format "stty -nl sane iutf8 rows %d columns %d >/dev/null && exec %s"
                                (window-body-height) (window-body-width) vterm-shell))
