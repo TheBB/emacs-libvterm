@@ -104,6 +104,7 @@ be send to the terminal."
 (define-key vterm-mode-map [mouse-3] nil)
 (define-key vterm-mode-map [mouse-4] #'ignore)
 (define-key vterm-mode-map [mouse-5] #'ignore)
+(define-key vterm-mode-map [vertical-line] (lookup-key global-map [vertical-line]))
 (dolist (prefix '("M-" "C-"))
   (dolist (char (cl-loop for char from ?a to ?z
                          collect char))
