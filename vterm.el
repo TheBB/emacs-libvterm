@@ -83,7 +83,13 @@ be send to the terminal."
         buffer-read-only t)
   (setq-local scroll-conservatively 101)
   (setq-local scroll-margin 0)
-  (add-hook 'window-size-change-functions #'vterm--window-size-change t t)
+
+  ;; Update when a window resize happens and the buffer is visible
+  (add-hook 'window-size-change-functions #'vterm--window-size-change)
+
+  ;; Update when the buffer becomes visible, if a resize happened while it was hidden
+  (add-hook 'buffer-list-update-hook #'vterm--buffer-list-update)
+
   (let ((process-environment (append '("TERM=xterm") process-environment)))
     (setq vterm--process
           (make-process
@@ -162,16 +168,25 @@ be send to the terminal."
       (let ((inhibit-read-only t))
         (insert "*** Shell process quit: " event)))))
 
+(defun vterm--update-size (window)
+  (let ((height (window-body-height window))
+        (width (window-body-width window)))
+    (set-process-window-size vterm--process height width)
+    (vterm--set-size vterm--term height width)))
+
 (defun vterm--window-size-change (frame)
   (dolist (window (window-list frame))
     (with-current-buffer (window-buffer window)
       (when (and (processp vterm--process)
                  (process-live-p vterm--process))
-        (let ((height (window-body-height window))
-              (width (window-body-width window)))
-          (set-process-window-size vterm--process height width)
-          (message "%s %s" height width)
-          (vterm--set-size vterm--term height width))))))
+        (vterm--update-size window)))))
+
+(defun vterm--buffer-list-update ()
+  (when (and (processp vterm--process)
+             (process-live-p vterm--process))
+    (let ((window (get-buffer-window (current-buffer))))
+      (when window
+        (vterm--update-size window)))))
 
 (defun vterm--face-color-hex (face attr)
   "Return the color of the FACE's ATTR as a hex string."
